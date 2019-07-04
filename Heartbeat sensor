@@ -1,0 +1,49 @@
+import RPi.GPIO as GPIO
+import time
+import mcp3008
+
+#setup to board
+GPIO.setmode(BMW)
+GPIO.setup(18,GPIO.IN)
+
+#hardware spi configuration
+SPI_PORT   = 0
+SPI_DEVICE = 0
+mcp = Adafruit_MCP3008.MCP3008(spi=SPI.SpiDev(SPI_PORT, SPI_DEVICE))
+
+# Software SPI configuration:
+CLK  = 7
+MISO = 9
+MOSI = 11
+CS   = 8
+mcp = Adafruit_MCP3008.MCP3008(clk=CLK, cs=CS, miso=MISO, mosi=MOSI)
+
+#input variable
+input_value=GPIO.setup(18,GPIO.IN)
+
+
+try:
+
+    while input_value > 0  :
+        
+        if input_value > 0 && <= 60 :
+            print("your heartbeat = " +" "+ input_value)
+            state = "your heartbeat is lowest than the Normally"
+            time.sleep(3)
+        elif input_value > 60 && <= 80 :
+            print("your heartbeat = "+ " " + input_value)
+            state = "your heartbeat is Normally"
+            time.sleep(3)
+        elif input_value > 80 :
+            print("your heartbeat = " + " " + input_value)
+            state = "your heartbeat is higher than the Normally"
+            time.sleep(3)
+        else:
+            print("NO heartbeat found")
+            time.sleep(3)
+
+    firebase = firebase.post('/heartbeat',input_value)
+    firebase = firebase.post('/state',state)
+
+except KeyboardInterrupt :
+    GPIO.cleanup()
